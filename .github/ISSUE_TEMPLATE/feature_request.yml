@@ -1,0 +1,33 @@
+name: Feature request
+description: A tool, an engine endpoint or an authentication scheme this does not cover yet
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to find out or do?
+      description: >-
+        The question you want to put to the model, or the operation you want it to perform —
+        rather than the API call you think it needs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: endpoint
+    attributes:
+      label: Which engine endpoint would answer it?
+      description: >-
+        A link to the [REST docs](https://docs.camunda.org/manual/latest/reference/rest/), if you
+        know. `camunda_get` reaches any read endpoint already — say if it is not enough, and why.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: writes
+    attributes:
+      label: Does it change engine state?
+      options:
+        - 'No — read only'
+        - 'Yes — it belongs behind CAMUNDA_ALLOW_WRITE'
+    validations:
+      required: true
