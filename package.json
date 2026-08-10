@@ -1,6 +1,6 @@
 {
   "name": "@deitum/camunda-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server for Camunda 7 — BPMN/DMN definitions, process instances, incidents, user tasks, history and DMN evaluation over the engine REST API.",
   "type": "commonjs",
   "main": "./dist/index.js",
