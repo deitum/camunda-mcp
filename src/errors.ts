@@ -9,8 +9,8 @@ const TLS_CODES = new Set([
 
 const TLS_HINT =
   'The certificate chain is not trusted by Node (curl works because it uses the system store). ' +
-  'Point NODE_EXTRA_CA_CERTS at the root certificate, or set NODE_TLS_REJECT_UNAUTHORIZED=0 for ' +
-  'this process.';
+  'Point NODE_EXTRA_CA_CERTS at the root certificate, or set CAMUNDA_SSL_VERIFY=false to stop ' +
+  'verifying certificates altogether.';
 
 /**
  * Flattens an error and its `cause` chain into one line.

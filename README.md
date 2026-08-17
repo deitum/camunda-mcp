@@ -94,8 +94,12 @@ filled in reads as a missing value rather than being sent to the engine as a use
 | `CAMUNDA_AUTH_TRANSPORT` | –        | `header` (default) \| `cookie` — how the token reaches the engine.         |
 | `CAMUNDA_COOKIE_NAME`    | –        | Cookie to put it in when the transport is `cookie` (default `JWT`).        |
 | `CAMUNDA_ALLOW_WRITE`    | –        | `true` registers the tools that change the engine. Default off.            |
+| `CAMUNDA_SSL_VERIFY`     | –        | `false` stops verifying TLS certificates ([why](#tls)). Default on.        |
 | `CAMUNDA_MAX_RESULTS`    | –        | Default page size (default 20, hard cap 100).                              |
 | `CAMUNDA_TIMEOUT_MS`     | –        | Per-request budget (default 30000).                                        |
+
+The two flags read `true`/`1`/`yes` and `false`/`0`/`no`; anything else leaves the default in
+place, so a typo can only fail closed — writes off, certificates verified.
 
 ## Authentication
 
@@ -170,9 +174,20 @@ and says which URLs to try.
 
 An internally hosted engine is often signed by a private root that Node does not ship, so the first
 call fails with `SELF_SIGNED_CERT_IN_CHAIN` while `curl` against the same URL works (it uses the
-system store). Either point `NODE_EXTRA_CA_CERTS` at the root certificate, or set
-`NODE_TLS_REJECT_UNAUTHORIZED=0` for this process. The error message says as much rather than
-repeating `fetch failed`.
+system store). The error message says as much rather than repeating `fetch failed`.
+
+Two ways out, in order of preference:
+
+```bash
+NODE_EXTRA_CA_CERTS=/path/to/internal-root.pem   # keeps verification, just teaches Node the root
+CAMUNDA_SSL_VERIFY=false                         # verifies nothing at all
+```
+
+`CAMUNDA_SSL_VERIFY=false` sets `NODE_TLS_REJECT_UNAUTHORIZED=0`, which is process-wide: Node's
+`fetch` takes TLS settings from the process, not per connection, so it covers the token endpoint
+too and there is no way to scope it to the engine alone. It leaves the connection open to
+interception — use it against a development engine, and add the root certificate for anything else.
+The startup banner on stderr says `TLS verification OFF` while it is in effect.
 
 ## Tools
 

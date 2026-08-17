@@ -27,3 +27,4 @@ export type {
 export { CamundaClient, CamundaError, type RequestOptions } from './client';
 export { describeAuth, loadConfig } from './config';
 export { createCamundaServer, type ServerDeps } from './server';
+export { applySslVerify } from './tls';

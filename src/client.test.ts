@@ -13,6 +13,7 @@ import { CamundaClient, CamundaError } from './client';
 const CONFIG: CamundaConfig = {
   baseUrl: 'https://camunda.example/engine-rest',
   allowWrite: false,
+  sslVerify: true,
   defaultMaxResults: 20,
   timeoutMs: 1_000,
 };

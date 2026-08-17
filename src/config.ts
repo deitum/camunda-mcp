@@ -32,9 +32,26 @@ function read(env: NodeJS.ProcessEnv, name: string): string | undefined {
   return value;
 }
 
-function readBoolean(env: NodeJS.ProcessEnv, name: string): boolean {
+const TRUTHY = new Set(['true', '1', 'yes']);
+const FALSY = new Set(['false', '0', 'no']);
+
+/**
+ * A flag. Anything that reads as neither a yes nor a no leaves `fallback` in
+ * place, and every default here is the safe side of its flag — writes off,
+ * certificates verified — so a typo can only ever fail closed.
+ */
+function readBoolean(env: NodeJS.ProcessEnv, name: string, fallback = false): boolean {
   const value = read(env, name)?.toLowerCase();
-  return value === 'true' || value === '1' || value === 'yes';
+  if (value === undefined) {
+    return fallback;
+  }
+  if (TRUTHY.has(value)) {
+    return true;
+  }
+  if (FALSY.has(value)) {
+    return false;
+  }
+  return fallback;
 }
 
 function readNumber(env: NodeJS.ProcessEnv, name: string, fallback: number): number {
@@ -232,6 +249,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): CamundaConfig 
     baseUrl: baseUrl.replace(/\/+$/, ''),
     ...(auth ? { auth } : {}),
     allowWrite: readBoolean(env, 'CAMUNDA_ALLOW_WRITE'),
+    sslVerify: readBoolean(env, 'CAMUNDA_SSL_VERIFY', true),
     defaultMaxResults,
     timeoutMs: readNumber(env, 'CAMUNDA_TIMEOUT_MS', REQUEST_TIMEOUT_MS),
   };

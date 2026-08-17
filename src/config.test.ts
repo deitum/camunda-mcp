@@ -33,6 +33,16 @@ describe('loadConfig', () => {
     assert.equal(loadConfig({ ...BASE, CAMUNDA_ALLOW_WRITE: 'maybe' }).allowWrite, false);
   });
 
+  test('verifies certificates unless told not to', () => {
+    assert.equal(loadConfig({ ...BASE }).sslVerify, true);
+    assert.equal(loadConfig({ ...BASE, CAMUNDA_SSL_VERIFY: 'false' }).sslVerify, false);
+    assert.equal(loadConfig({ ...BASE, CAMUNDA_SSL_VERIFY: '0' }).sslVerify, false);
+    assert.equal(loadConfig({ ...BASE, CAMUNDA_SSL_VERIFY: 'No' }).sslVerify, false);
+    // Neither a yes nor a no: the safe default stands rather than a typo
+    // silently disabling verification.
+    assert.equal(loadConfig({ ...BASE, CAMUNDA_SSL_VERIFY: 'maybe' }).sslVerify, true);
+  });
+
   test('caps the default page size and rejects nonsense numbers', () => {
     assert.equal(loadConfig({ ...BASE, CAMUNDA_MAX_RESULTS: '5000' }).defaultMaxResults, 100);
     assert.equal(loadConfig({ ...BASE, CAMUNDA_MAX_RESULTS: '5' }).defaultMaxResults, 5);

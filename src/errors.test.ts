@@ -29,7 +29,7 @@ describe('describeError', () => {
 
     assert.match(message, /SELF_SIGNED_CERT_IN_CHAIN/);
     assert.match(message, /NODE_EXTRA_CA_CERTS/);
-    assert.match(message, /NODE_TLS_REJECT_UNAUTHORIZED=0/);
+    assert.match(message, /CAMUNDA_SSL_VERIFY=false/);
   });
 
   test('leaves an ordinary error alone', () => {

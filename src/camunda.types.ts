@@ -64,6 +64,12 @@ export interface CamundaConfig {
   auth?: CamundaAuthConfig;
   /** Whether the tools that change engine state are registered at all. */
   allowWrite: boolean;
+  /**
+   * Whether the engine's TLS certificate is verified. On by default; turning it
+   * off is a process-wide switch rather than a property of one connection, see
+   * `applySslVerify` in `tls.ts`.
+   */
+  sslVerify: boolean;
   defaultMaxResults: number;
   timeoutMs: number;
 }
